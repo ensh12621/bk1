@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +29,8 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+	private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+	
 	private MemberRepository memberRepository;
 
 	private PasswordEncoder passwordEncoder;
@@ -45,13 +49,12 @@ public class AuthServiceImpl implements AuthService {
 	public boolean addMember(JoinDTO dto) {
 		UUID uuid = UUID.randomUUID();
 
-		MemberEntity member = MemberEntity
-						.builder()
-						.userPk(uuid.toString())
-						.userId(dto.getUserId())
-						.role("normal")
-				.userPwd(passwordEncoder.encode(dto.getUserPwd())).build();
-
+		MemberEntity member = new MemberEntity();
+		member.setUserPk(uuid.toString());
+		member.setUserId(dto.getUserId());
+		member.setUserPwd(passwordEncoder.encode(dto.getUserPwd()));
+		member.setRole("normal");
+		
 		return memberRepository.save(member) != null;
 	}
 
@@ -75,8 +78,10 @@ public class AuthServiceImpl implements AuthService {
 		if (entity == null) {
 			return null;
 		}
+		
 
 		if (!passwordEncoder.matches(dto.getUserPwd(), entity.getUserPwd())) {
+			logger.info("비밀번호 불일치..");
 			return null;
 		}
 

@@ -59,10 +59,11 @@ public class AuthController {
 			map.put("result", "success");
 			map.put("accessToken", keys.get("accessToken"));
 			map.put("refreshToken", keys.get("refreshToken"));
+			logger.info("jwt generate..");
 			
 		}else {
 			map.put("result", "failed");
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(map);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(map);
 		}
 		
 		return ResponseEntity.ok(map);
