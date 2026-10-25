@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kkh.backend.dto.JoinDTO;
@@ -65,7 +66,26 @@ public class AuthController {
 		}
 		
 		return ResponseEntity.ok(map);
+	}
+	
+	@PostMapping("/refresh")
+	public ResponseEntity<Map<String, String>> refreshToken(@RequestParam("refreshToken") String refreshToken){
+		Map<String, String> map = new HashMap<>();
+
+		if(authService.validateToken(refreshToken)) {
+			logger.info("refresh 유효. jwt 발급신청 시작");
+			
+			String userId = authService.getUserIdFromToken(refreshToken);
+			String token = authService.generateToken(userId, 1000 * 30);
+			
+			map.put("accessToken", token);
+			
+		}else {
+			logger.info("refresh 유효성 오류");
+			map.put("result", "failed");
+		}
 		
 		
+		return ResponseEntity.ok(map);
 	}
 }

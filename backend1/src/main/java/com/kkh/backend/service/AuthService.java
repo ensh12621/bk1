@@ -16,5 +16,6 @@ public interface AuthService {
 	boolean validateToken(String token);
 	String getUserIdFromToken(String token);
 	UserDetails loadUserDetails(String userId);
+	String generateToken(String userId, int expirationMilliSecond);
 }
 	

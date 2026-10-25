@@ -55,7 +55,8 @@ public class AuthServiceImpl implements AuthService {
 		return memberRepository.save(member) != null;
 	}
 
-	private String generateToken(String userId, int expirationMilliSecond) {
+	@Override
+	public String generateToken(String userId, int expirationMilliSecond) {
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + expirationMilliSecond);
 
@@ -79,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
 			return null;
 		}
 
-		String accessToken = generateToken(dto.getUserId(), 1000 * 60 * 5);
+		String accessToken = generateToken(dto.getUserId(), 1000 * 30);
 		String refreshToken = generateToken(dto.getUserId(), 1000 * 60 * 10);
 
 		map.put("accessToken", accessToken);
