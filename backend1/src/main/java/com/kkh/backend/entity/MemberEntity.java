@@ -25,4 +25,7 @@ public class MemberEntity {
 	
 	@Column(nullable = false)
 	private String userPwd;
+	
+	
+	private String role;
 }
