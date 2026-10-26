@@ -42,15 +42,19 @@ public class StudentController {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<Map<String, Object>> searchStudent(@RequestParam(name = "keyword", required = false) String keyword, @RequestParam(name="deptNo", required = false) String deptNo){
+	public ResponseEntity<Map<String, Object>> searchStudent(@RequestParam(name = "keyword", required = false) String keyword, @RequestParam(name="deptNo", required = false) String deptNo, @RequestParam(name="orderBy", required = false) String orderBy){
+		
 		logger.info("/search endpoint 도달..keyword:[{}] deptno:[{}]", keyword, deptNo);
 		Map<String, Object> map = new HashMap<>();
 		
 		Long deptNoParam = !deptNo.isEmpty() ? Long.valueOf(deptNo) : null;
-		String keywordParam = !keyword.isEmpty() ? keyword : null; 
+		String keywordParam = !keyword.isEmpty() ? keyword : null;
+		if(orderBy == null) {
+			orderBy = "dept";
+		}
 		
 		
-		List<StudentDTO> list = studentService.searchStudents(keywordParam, deptNoParam);
+		List<StudentDTO> list = studentService.searchStudents(keywordParam, deptNoParam, orderBy);
 		logger.info("검색어: [{}]", keyword);
 		map.put("list", list);
 		map.put("result", "success");

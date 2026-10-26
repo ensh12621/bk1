@@ -42,9 +42,9 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	@Override
-	public List<StudentDTO> searchStudents(String keyword, Long deptNo) {
+	public List<StudentDTO> searchStudents(String keyword, Long deptNo, String orderBy) {
 		
-		List <StudentDTO> list = studentMapper.searchStudentList(keyword, deptNo);
+		List <StudentDTO> list = studentMapper.searchStudentList(keyword, deptNo, orderBy);
 		logger.info("학생 리스트 추출중.. {}개", list.size());
 		return list;
 //		List<StudentEntity> list = studentRepository.findByNameContaining(keyword);

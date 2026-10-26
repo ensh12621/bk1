@@ -9,7 +9,7 @@ public interface StudentService {
 
 	List<StudentDTO> getAllStudents();
 
-	List<StudentDTO> searchStudents(String keyword, Long deptNo);
+	List<StudentDTO> searchStudents(String keyword, Long deptNo, String orderBy);
 
 	List<DepartmentDTO> getAllDepartments();
 

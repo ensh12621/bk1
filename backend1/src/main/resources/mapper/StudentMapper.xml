@@ -10,15 +10,26 @@
 		    stu s
 		    join department d on s.deptno1 = d.deptno
 		    join professor p on p.profno = s.profno
-		<where>
+		where
+			1=1
 			<if test="keyword != null and keyword != ''">
             	<!-- 💡 오라클 방식인 || 연산자로 변경 -->
-            	s.name LIKE '%' || #{keyword} || '%'
+            	AND s.name LIKE '%' || #{keyword} || '%'
 	        </if>
 	        <if test="deptNo != null">
 	            AND s.deptno1 = #{deptNo}
         	</if>
-		</where>
+        	<choose>
+        		<when test="orderBy == 'dept'">
+        			ORDER BY d.dname ASC
+        		</when>
+        		<when test="orderBy == 'height'">
+        			ORDER BY s.height ASC
+        		</when>
+        		<when test="orderBy == 'name'">
+        			ORDER BY s.name ASC
+        		</when>
+        	</choose>
 	</select>
 
 </mapper>
