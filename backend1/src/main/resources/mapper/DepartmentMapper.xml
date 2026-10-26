@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kkh.backend.mybatis.mapper.DepartmentMapper">
+
+	<select id="selectDepartmentList" resultType="com.kkh.backend.mybatis.model.DepartmentDTO">
+		select 
+			deptno, build, dname
+		from 
+			department 
+		where 
+			build is not null and part is not null
+	</select>
+
+</mapper>

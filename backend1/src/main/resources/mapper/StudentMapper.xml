@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kkh.backend.mybatis.mapper.StudentMapper">
+
+	
+	<select id="searchStudentList" resultType="com.kkh.backend.mybatis.model.StudentDTO">
+		select 
+		    s.stuno, s.name, s.id, s.grade, s.jumin, s.birthday, s.tel, s.height, s.weight, d.dname as "deptName", p.name as "professorName" 
+		from 
+		    stu s
+		    join department d on s.deptno1 = d.deptno
+		    join professor p on p.profno = s.profno
+		<where>
+			<if test="keyword != null and keyword != ''">
+            	<!-- 💡 오라클 방식인 || 연산자로 변경 -->
+            	s.name LIKE '%' || #{keyword} || '%'
+	        </if>
+	        <if test="deptNo != null">
+	            AND s.deptno1 = #{deptNo}
+        	</if>
+		</where>
+	</select>
+
+</mapper>

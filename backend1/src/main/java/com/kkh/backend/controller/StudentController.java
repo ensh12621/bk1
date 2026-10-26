@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kkh.backend.dto.DepartmentDTO;
 import com.kkh.backend.dto.StudentDTO;
 import com.kkh.backend.service.StudentService;
 
@@ -41,9 +42,15 @@ public class StudentController {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<Map<String, Object>> searchStudent(@RequestParam("keyword") String keyword){
+	public ResponseEntity<Map<String, Object>> searchStudent(@RequestParam(name = "keyword", required = false) String keyword, @RequestParam(name="deptNo", required = false) String deptNo){
+		logger.info("/search endpoint 도달..keyword:[{}] deptno:[{}]", keyword, deptNo);
 		Map<String, Object> map = new HashMap<>();
-		List<StudentDTO> list = studentService.searchStudents(keyword);
+		
+		Long deptNoParam = !deptNo.isEmpty() ? Long.valueOf(deptNo) : null;
+		String keywordParam = !keyword.isEmpty() ? keyword : null; 
+		
+		
+		List<StudentDTO> list = studentService.searchStudents(keywordParam, deptNoParam);
 		logger.info("검색어: [{}]", keyword);
 		map.put("list", list);
 		map.put("result", "success");
@@ -52,4 +59,23 @@ public class StudentController {
 		
 		return ResponseEntity.ok(map);
 	}
+	
+	@GetMapping("/department-list")
+	public ResponseEntity<Map<String, Object>> departmentList(){
+		logger.info("department-list endpoint 도달");
+		Map<String, Object> map = new HashMap<>();
+		List<DepartmentDTO> list = studentService.getAllDepartments();
+		if(list.size() > 0) {
+			logger.info("데이터 조회 데이터 존재..");
+			
+			map.put("result", "success");
+			map.put("list", list);
+		}else {
+			logger.info("조회된 데이터 0개.");
+			map.put("result", "failed");
+		}
+		
+		return ResponseEntity.ok(map);
+	}
+	
 }

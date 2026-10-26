@@ -44,7 +44,7 @@ public class SecurityConfig {
 
             // URL별 접근 권한 관리 설정
             .authorizeHttpRequests(auth -> 
-            	auth.requestMatchers("/student/list").authenticated()
+            	auth.requestMatchers("/student/**").authenticated()
             	.anyRequest().permitAll()
         	)
             
