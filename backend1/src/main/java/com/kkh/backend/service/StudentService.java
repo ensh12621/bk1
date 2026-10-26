@@ -8,4 +8,6 @@ public interface StudentService {
 
 	List<StudentDTO> getAllStudents();
 
+	List<StudentDTO> searchStudents(String keyword);
+
 }

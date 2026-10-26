@@ -21,9 +21,22 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public List<StudentDTO> getAllStudents() {
 		List<StudentEntity> list = studentRepository.findAll();
-		
 		List<StudentDTO> resultList = new ArrayList<StudentDTO>();
+		setDTOListWithEntityList(list, resultList);
+		return resultList;
 		
+	}
+
+	@Override
+	public List<StudentDTO> searchStudents(String keyword) {
+		List<StudentEntity> list = studentRepository.findByNameContaining(keyword);
+		List<StudentDTO> resultList = new ArrayList<StudentDTO>();
+		setDTOListWithEntityList(list, resultList);
+		return resultList;
+	}
+
+	private void setDTOListWithEntityList(List<StudentEntity> list, List<StudentDTO> resultList) {
+
 		list.forEach(item -> {
 			StudentDTO dto = StudentDTO
 								.builder()
@@ -50,8 +63,5 @@ public class StudentServiceImpl implements StudentService{
 			
 			resultList.add(dto);
 		});
-		
-		return resultList;
-		
 	}
 }

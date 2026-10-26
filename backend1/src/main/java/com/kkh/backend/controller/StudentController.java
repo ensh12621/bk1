@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kkh.backend.dto.StudentDTO;
@@ -31,6 +32,19 @@ public class StudentController {
 		Map<String, Object> map = new HashMap<>();
 		List<StudentDTO> list = studentService.getAllStudents();
 		
+		map.put("list", list);
+		map.put("result", "success");
+		
+		logger.info("리스트 요소 갯수: " + list.size());
+		
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<Map<String, Object>> searchStudent(@RequestParam("keyword") String keyword){
+		Map<String, Object> map = new HashMap<>();
+		List<StudentDTO> list = studentService.searchStudents(keyword);
+		logger.info("검색어: [{}]", keyword);
 		map.put("list", list);
 		map.put("result", "success");
 		
