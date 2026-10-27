@@ -12,7 +12,6 @@ import com.kkh.backend.dto.StudentDTO;
 import com.kkh.backend.entity.StudentEntity;
 import com.kkh.backend.mybatis.mapper.DepartmentMapper;
 import com.kkh.backend.mybatis.mapper.StudentMapper;
-import com.kkh.backend.repository.DepartmentRepository;
 import com.kkh.backend.repository.StudentRepository;
 
 @Service
@@ -23,11 +22,11 @@ public class StudentServiceImpl implements StudentService{
 	private DepartmentMapper departmentMapper;
 	private StudentMapper studentMapper;
 	private StudentRepository studentRepository;
-	private DepartmentRepository departmentRepository;
+//	private DepartmentRepository departmentRepository;
 	
-	public StudentServiceImpl(StudentRepository studentRepository, DepartmentRepository departmentRepository, DepartmentMapper departmentMapper, StudentMapper studentMapper) {
+	public StudentServiceImpl(StudentRepository studentRepository, DepartmentMapper departmentMapper, StudentMapper studentMapper) {
 		this.studentRepository = studentRepository;
-		this.departmentRepository = departmentRepository;
+//		this.departmentRepository = departmentRepository;
 		this.departmentMapper = departmentMapper;
 		this.studentMapper = studentMapper;
 	}
@@ -42,9 +41,10 @@ public class StudentServiceImpl implements StudentService{
 	}
 
 	@Override
-	public List<StudentDTO> searchStudents(String keyword, Long deptNo, String orderBy) {
+	public List<StudentDTO> searchStudents(String keyword, Long deptNo, String orderBy, Long currentPage, Long pageSize) {
 		
-		List <StudentDTO> list = studentMapper.searchStudentList(keyword, deptNo, orderBy);
+		Long offset = (currentPage - 1) * pageSize;
+		List <StudentDTO> list = studentMapper.searchStudentList(keyword, deptNo, orderBy, offset, pageSize);
 		logger.info("학생 리스트 추출중.. {}개", list.size());
 		return list;
 //		List<StudentEntity> list = studentRepository.findByNameContaining(keyword);
@@ -85,5 +85,10 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public List<DepartmentDTO> getAllDepartments() {
 		return departmentMapper.selectDepartmentList();
+	}
+
+	@Override
+	public Long searchStudentCount(String keyword, Long deptNo) {
+		return studentMapper.searchStudentCount(keyword, deptNo);
 	}
 }

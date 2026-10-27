@@ -10,5 +10,6 @@ import com.kkh.backend.dto.StudentDTO;
 @Mapper
 public interface StudentMapper {
 
-	List<StudentDTO> searchStudentList(@Param("keyword") String keyword, @Param("deptNo") Long deptNo, @Param("orderBy") String orderBy);
+	List<StudentDTO> searchStudentList(@Param("keyword") String keyword, @Param("deptNo") Long deptNo, @Param("orderBy") String orderBy, @Param("offset") Long offset, @Param("pageSize") Long pageSize);
+	Long searchStudentCount(@Param("keyword") String keyword, @Param("deptNo") Long deptNo);
 }

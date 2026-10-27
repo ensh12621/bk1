@@ -16,6 +16,8 @@ import com.kkh.backend.dto.DepartmentDTO;
 import com.kkh.backend.dto.StudentDTO;
 import com.kkh.backend.service.StudentService;
 
+import io.micrometer.common.util.StringUtils;
+
 @RequestMapping("/student")
 @RestController
 public class StudentController {
@@ -42,7 +44,13 @@ public class StudentController {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<Map<String, Object>> searchStudent(@RequestParam(name = "keyword", required = false) String keyword, @RequestParam(name="deptNo", required = false) String deptNo, @RequestParam(name="orderBy", required = false) String orderBy){
+	public ResponseEntity<Map<String, Object>> searchStudent(
+			@RequestParam(name = "keyword", required = false) String keyword, 
+			@RequestParam(name="deptNo", required = false) String deptNo, 
+			@RequestParam(name="orderBy", required = false) String orderBy,
+			@RequestParam(name="currentPage", defaultValue = "1") String currentPage,
+			@RequestParam(name="pageSize", defaultValue = "5") String pageSize){
+		
 		
 		logger.info("/search endpoint 도달..keyword:[{}] deptno:[{}]", keyword, deptNo);
 		Map<String, Object> map = new HashMap<>();
@@ -53,8 +61,10 @@ public class StudentController {
 			orderBy = "dept";
 		}
 		
+		logger.info("paging - currentPage:[{}], pageSize:[{}]", currentPage, pageSize);
 		
-		List<StudentDTO> list = studentService.searchStudents(keywordParam, deptNoParam, orderBy);
+		
+		List<StudentDTO> list = studentService.searchStudents(keywordParam, deptNoParam, orderBy, Long.valueOf(currentPage), Long.valueOf(pageSize));
 		logger.info("검색어: [{}]", keyword);
 		map.put("list", list);
 		map.put("result", "success");
@@ -82,4 +92,19 @@ public class StudentController {
 		return ResponseEntity.ok(map);
 	}
 	
+	// search-count?keyword=${keyword}&deptNo=${deptNo
+	
+	@GetMapping("/search-count")
+	public ResponseEntity<Map<String, Object>> searchCount(@RequestParam("keyword") String keyword, @RequestParam("deptNo") String deptNo){
+		
+		Map<String, Object> map = new HashMap<>();
+		Long deptNoLongVal = StringUtils.isBlank(deptNo) ? null : Long.valueOf(deptNo);
+		logger.info("search-count endpoint 도달 - keyword[{}] deptNo[{}]", keyword, deptNoLongVal);
+		
+		Long count = studentService.searchStudentCount(keyword, deptNoLongVal);
+		logger.info("갯수만 추출 - {}", count);
+		map.put("count", count);
+		
+		return ResponseEntity.ok(map);
+	};
 }

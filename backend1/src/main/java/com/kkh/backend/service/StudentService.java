@@ -9,8 +9,10 @@ public interface StudentService {
 
 	List<StudentDTO> getAllStudents();
 
-	List<StudentDTO> searchStudents(String keyword, Long deptNo, String orderBy);
+	List<StudentDTO> searchStudents(String keyword, Long deptNo, String orderBy, Long offset, Long pageSize);
 
 	List<DepartmentDTO> getAllDepartments();
+
+	Long searchStudentCount(String keyword, Long deptNo);
 
 }

@@ -30,6 +30,29 @@
         			ORDER BY s.name ASC
         		</when>
         	</choose>
+        	OFFSET #{offset} ROWS
+			FETCH NEXT #{pageSize} ROWS ONLY
+
+
+	</select>
+	
+	<select id="searchStudentCount" resultType="Long">
+		select 
+			count(*) as cnt
+		from
+			stu
+		where
+			1=1
+			<choose>
+				<when test="deptNo != null">
+					and deptno1 = #{deptNo}
+				</when>
+				<when test="keyword != null">
+					and name like '%' || #{keyword} || '%'
+				</when>
+				
+			</choose>
+			
 	</select>
 
 </mapper>
